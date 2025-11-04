@@ -92,7 +92,7 @@ const Chat = () => {
 
     setMessages((prevState) => GiftedChat.append(prevState, [message] as unknown as IMessage[]));
     try {
-      console.error(process.env.EXPO_PUBLIC_OPENAI_API_KEY)
+      console.error(process.env.EXPO_PUBLIC_OPENAI_API_KEY);
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -210,7 +210,7 @@ const Chat = () => {
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <GiftedChat
           messages={messages}
-          renderInputToolbar={() => {}}
+          renderInputToolbar={() => null}
           user={{ _id: 1 }}
           minInputToolbarHeight={0}
           renderMessage={renderMessage}

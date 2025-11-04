@@ -16,7 +16,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="robot" size={24} color={color} />
           ),
-/*           headerRight: () => (
+          /*           headerRight: () => (
             <Link href="/modal" asChild>
               <HeaderButton />
             </Link>
