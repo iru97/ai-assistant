@@ -11,6 +11,10 @@ import {
   updateSetting as updateSettingManager,
   resetSettings as resetSettingsManager,
 } from '~/utils/settingsManager';
+import {
+  scheduleDailyAffirmation,
+  cancelDailyAffirmation,
+} from '~/utils/notifications';
 
 interface SettingsContextValue {
   settings: UserSettings;
@@ -41,6 +45,32 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   useEffect(() => {
     loadSettings();
   }, []);
+
+  // Handle notification scheduling when affirmation settings change
+  useEffect(() => {
+    if (isLoading) {
+      // Don't schedule notifications during initial load
+      return;
+    }
+
+    const handleNotificationScheduling = async () => {
+      try {
+        if (settings.dailyAffirmationEnabled) {
+          // Schedule notification at the specified time
+          console.log(`Scheduling daily affirmation at ${settings.dailyAffirmationTime}`);
+          await scheduleDailyAffirmation(settings.dailyAffirmationTime);
+        } else {
+          // Cancel any scheduled notifications
+          console.log('Cancelling daily affirmation notifications');
+          await cancelDailyAffirmation();
+        }
+      } catch (error) {
+        console.error('Failed to update notification scheduling:', error);
+      }
+    };
+
+    handleNotificationScheduling();
+  }, [settings.dailyAffirmationEnabled, settings.dailyAffirmationTime, isLoading]);
 
   const loadSettings = async () => {
     try {
