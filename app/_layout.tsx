@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { useAuth } from '~/providers/AuthProvider';
 import { ThemeProvider } from '~/themes/ThemeProvider';
+import { SettingsProvider, useSettings } from '~/contexts/SettingsContext';
 import { supabase } from '~/utils/supabase';
 import { hasCompletedOnboarding } from '~/utils/onboardingManager';
 
@@ -79,12 +80,25 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <SettingsProvider>
+      <ThemeProviderWrapper>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+      </ThemeProviderWrapper>
+    </SettingsProvider>
   );
+}
+
+// Wrapper component to bridge SettingsContext and ThemeProvider
+function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
+  const { settings, isLoading } = useSettings();
+
+  if (isLoading) {
+    return null; // or a loading screen
+  }
+
+  return <ThemeProvider themePreference={settings.theme}>{children}</ThemeProvider>;
 }

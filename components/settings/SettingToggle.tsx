@@ -1,6 +1,7 @@
 /**
  * Setting Toggle Component
  * Renders a toggle switch setting row
+ * Dark mode support with theme-aware colors
  */
 
 import React from 'react';
@@ -34,7 +35,12 @@ export function SettingToggle({
       iconBackgroundColor={iconBackgroundColor}
       isFirst={isFirst}
     >
-      <Switch onValueChange={onChange} value={value} />
+      <Switch
+        onValueChange={onChange}
+        value={value}
+        trackColor={{ false: '#d1d5db', true: '#a78bfa' }}
+        thumbColor={value ? '#7c3aed' : '#f4f3f4'}
+      />
     </SettingRow>
   );
 }

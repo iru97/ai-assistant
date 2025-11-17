@@ -11,6 +11,7 @@ interface OnboardingScreenProps {
   onSkip?: () => void;
   showSkip?: boolean;
   nextButtonText?: string;
+  nextButtonDisabled?: boolean;
   backgroundColor?: string;
 }
 
@@ -28,6 +29,7 @@ export function OnboardingScreen({
   onSkip,
   showSkip = false,
   nextButtonText = 'Next',
+  nextButtonDisabled = false,
   backgroundColor = 'bg-white',
 }: OnboardingScreenProps) {
   return (
@@ -71,9 +73,14 @@ export function OnboardingScreen({
       <View className="px-6 pb-8">
         <TouchableOpacity
           onPress={onNext}
-          className="items-center rounded-full bg-purple-600 px-8 py-4 shadow-md"
-          activeOpacity={0.8}>
-          <Text className="text-lg font-semibold text-white">{nextButtonText}</Text>
+          disabled={nextButtonDisabled}
+          className={`items-center rounded-full px-8 py-4 shadow-md ${
+            nextButtonDisabled ? 'bg-gray-300' : 'bg-purple-600'
+          }`}
+          activeOpacity={nextButtonDisabled ? 1 : 0.8}>
+          <Text className={`text-lg font-semibold ${nextButtonDisabled ? 'text-gray-500' : 'text-white'}`}>
+            {nextButtonText}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, FlatList, Dimensions, TouchableOpacity, Switch, Alert } from 'react-native';
+import { View, Text, FlatList, Dimensions, TouchableOpacity, Switch, Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { OnboardingScreen } from '~/components/OnboardingScreen';
 import { FeatureCard } from '~/components/FeatureCard';
@@ -12,11 +12,11 @@ import {
 
 const { width } = Dimensions.get('window');
 
-type Screen = 'welcome' | 'features' | 'personalize' | 'permissions' | 'ready';
+type Screen = 'welcome' | 'features' | 'personalize' | 'permissions' | 'terms' | 'ready';
 
 /**
  * Onboarding Flow
- * 5-screen carousel for first-time users
+ * 6-screen carousel for first-time users
  */
 export default function OnboardingFlow() {
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -26,9 +26,10 @@ export default function OnboardingFlow() {
   const [language, setLanguage] = useState<Language>('en');
   const [affirmationsEnabled, setAffirmationsEnabled] = useState(true);
   const [affirmationTime, setAffirmationTime] = useState('09:00');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // Screen configuration
-  const screens: Screen[] = ['welcome', 'features', 'personalize', 'permissions', 'ready'];
+  const screens: Screen[] = ['welcome', 'features', 'personalize', 'permissions', 'terms', 'ready'];
 
   const goToNext = () => {
     if (currentScreen < screens.length - 1) {
@@ -280,6 +281,93 @@ export default function OnboardingFlow() {
                     Skip for now
                   </Text>
                 </TouchableOpacity>
+              </View>
+            </OnboardingScreen>
+          </View>
+        );
+
+      case 'terms':
+        return (
+          <View style={{ width }}>
+            <OnboardingScreen
+              title="Terms & Privacy"
+              subtitle="Please review and accept our terms to continue"
+              illustration="📋"
+              onNext={goToNext}
+              nextButtonText="Continue"
+              nextButtonDisabled={!acceptedTerms}
+              backgroundColor="bg-white">
+              <View className="mt-4">
+                {/* Medical Disclaimer */}
+                <View className="mb-4 rounded-lg bg-red-50 p-4">
+                  <Text className="mb-2 text-center text-base font-semibold text-red-900">
+                    ⚠️ Important Medical Disclaimer
+                  </Text>
+                  <Text className="text-center text-sm leading-relaxed text-red-800">
+                    Journal Safe is a wellness tool, NOT medical treatment. It is not a substitute
+                    for professional care. In crisis, call 911 or 988 immediately.
+                  </Text>
+                </View>
+
+                {/* Links to Full Documents */}
+                <View className="mb-4 space-y-3">
+                  <TouchableOpacity
+                    onPress={() => {
+                      router.push('/terms');
+                    }}
+                    className="flex-row items-center justify-between rounded-lg border border-gray-300 bg-white p-4">
+                    <View className="flex-1">
+                      <Text className="text-base font-semibold text-gray-900">Terms of Service</Text>
+                      <Text className="mt-1 text-sm text-gray-600">
+                        Your rights and responsibilities
+                      </Text>
+                    </View>
+                    <Text className="ml-2 text-purple-600">Read →</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      router.push('/privacy');
+                    }}
+                    className="flex-row items-center justify-between rounded-lg border border-gray-300 bg-white p-4">
+                    <View className="flex-1">
+                      <Text className="text-base font-semibold text-gray-900">Privacy Policy</Text>
+                      <Text className="mt-1 text-sm text-gray-600">
+                        How we protect your data
+                      </Text>
+                    </View>
+                    <Text className="ml-2 text-purple-600">Read →</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Acceptance Checkbox */}
+                <TouchableOpacity
+                  onPress={() => setAcceptedTerms(!acceptedTerms)}
+                  className="flex-row items-start rounded-lg bg-purple-50 p-4">
+                  <View
+                    className={`mr-3 mt-1 h-6 w-6 items-center justify-center rounded ${
+                      acceptedTerms ? 'bg-purple-600' : 'border-2 border-gray-400 bg-white'
+                    }`}>
+                    {acceptedTerms && <Text className="text-base font-bold text-white">✓</Text>}
+                  </View>
+                  <Text className="flex-1 text-sm leading-relaxed text-gray-800">
+                    I confirm that I am at least 13 years old and agree to the{' '}
+                    <Text className="font-semibold text-purple-600">Terms of Service</Text> and{' '}
+                    <Text className="font-semibold text-purple-600">Privacy Policy</Text>. I
+                    understand that Journal Safe is not medical advice and is not a substitute for
+                    professional care.
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Key Points Summary */}
+                <View className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+                  <Text className="mb-2 text-sm font-semibold text-gray-900">Key Points:</Text>
+                  <Text className="text-xs leading-relaxed text-gray-700">
+                    • You own your journal content{'\n'}• We never sell your data{'\n'}• You can
+                    export or delete your data anytime{'\n'}• Free during MVP (we'll notify before
+                    charging){'\n'}• Must be 13+ to use Journal Safe
+                  </Text>
+                </View>
               </View>
             </OnboardingScreen>
           </View>

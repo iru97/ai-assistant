@@ -17,6 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useAuth } from '~/providers/AuthProvider';
 import { supabase } from '~/utils/supabase';
 import { useSettings } from '~/contexts/SettingsContext';
@@ -259,13 +260,13 @@ export default function SettingsPage() {
     ]);
   };
 
-  // Open external links
+  // Navigate to legal pages
   const openPrivacyPolicy = () => {
-    Linking.openURL('https://yourapp.com/privacy');
+    router.push('/privacy');
   };
 
   const openTermsOfService = () => {
-    Linking.openURL('https://yourapp.com/terms');
+    router.push('/terms');
   };
 
   const openCrisisResources = () => {
@@ -305,23 +306,25 @@ export default function SettingsPage() {
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.centered}>
-          <Text style={styles.message}>Please sign in to access settings</Text>
+      <SafeAreaView className="flex-1 bg-gray-100 dark:bg-dark-background">
+        <View className="flex-1 justify-center items-center p-6">
+          <Text className="text-base text-gray-600 dark:text-dark-text-secondary text-center">
+            Please sign in to access settings
+          </Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Settings</Text>
+    <SafeAreaView className="flex-1 bg-gray-100 dark:bg-dark-background">
+      <View className="px-6 pt-3 pb-3">
+        <Text className="text-3xl font-bold text-gray-900 dark:text-dark-text">Settings</Text>
       </View>
 
       <ScrollView>
         {/* Profile Section */}
-        <View style={styles.profile}>
+        <View className="p-4 flex-col items-center bg-white dark:bg-dark-card border-t border-b border-gray-200 dark:border-dark-border mb-3">
           <Image
             alt="Profile"
             source={{
@@ -329,12 +332,17 @@ export default function SettingsPage() {
                 settings.avatarUrl ||
                 'https://e7.pngegg.com/pngimages/81/570/png-clipart-profile-logo-computer-icons-user-user-blue-heroes.png',
             }}
-            style={styles.profileAvatar}
+            className="w-15 h-15 rounded-full"
+            style={{ width: 60, height: 60, borderRadius: 30 }}
           />
-          <Text style={styles.profileName}>
+          <Text className="mt-3 text-xl font-semibold text-gray-900 dark:text-dark-text">
             {settings.displayName || user.email || 'User'}
           </Text>
-          {user.email && <Text style={styles.profileEmail}>{user.email}</Text>}
+          {user.email && (
+            <Text className="mt-1.5 text-base text-gray-500 dark:text-dark-text-secondary">
+              {user.email}
+            </Text>
+          )}
         </View>
 
         {/* Preferences Section */}
@@ -538,8 +546,8 @@ export default function SettingsPage() {
           />
         </SettingsSection>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
+        <View className="p-6 items-center">
+          <Text className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary text-center">
             Journal Safe - A safe space for your thoughts
           </Text>
         </View>
@@ -547,68 +555,3 @@ export default function SettingsPage() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f6f6f6',
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  message: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 12,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#1d1d1d',
-  },
-  profile: {
-    padding: 16,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#e3e3e3',
-    marginBottom: 12,
-  },
-  profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  profileName: {
-    marginTop: 12,
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#090909',
-  },
-  profileEmail: {
-    marginTop: 6,
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#848484',
-  },
-  footer: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#929292',
-    textAlign: 'center',
-  },
-});
