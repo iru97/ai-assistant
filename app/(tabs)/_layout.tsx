@@ -1,4 +1,4 @@
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
 
 /* import { HeaderButton } from '~/components/HeaderButton'; */
@@ -7,8 +7,16 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: '#7c3aed',
       }}>
+      <Tabs.Screen
+        name="journal"
+        options={{
+          title: 'Journal',
+          tabBarIcon: ({ color }) => <Ionicons name="journal-outline" size={24} color={color} />,
+          headerShown: false,
+        }}
+      />
       <Tabs.Screen
         name="assistant"
         options={{
@@ -24,10 +32,26 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="mood"
+        options={{
+          title: 'Mood',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="emoticon-happy-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="conversations"
         options={{
           title: 'Conversations',
           tabBarIcon: ({ color }) => <FontAwesome name="list" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="help"
+        options={{
+          title: 'Help',
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="lifebuoy" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
