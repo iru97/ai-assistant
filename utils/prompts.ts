@@ -71,13 +71,13 @@ async function fetchPromptsFromSupabase(): Promise<Prompt[]> {
   }
 
   // Map database fields to TypeScript types
-  // Note: Database currently has only 'text' column, not 'text_en' and 'text_es'
-  // We map 'text' to both languages until schema is updated
+  // Database has 'prompt_text' column (single language for now)
+  // We map it to both text_en and text_es until i18n is implemented
   return data.map((row) => ({
     id: row.id,
     category: row.category as PromptCategory,
-    text_en: row.text || row.text_en || '',
-    text_es: row.text || row.text_es || '',
+    text_en: row.prompt_text || '',
+    text_es: row.prompt_text || '', // TODO: Add prompt_text_es column for i18n
   }));
 }
 

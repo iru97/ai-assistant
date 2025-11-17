@@ -70,13 +70,14 @@ async function fetchAffirmationsFromSupabase(): Promise<Affirmation[]> {
   }
 
   // Map database fields to TypeScript types
-  // Note: Database currently has only 'text' column, not 'text_en' and 'text_es'
-  // We map 'text' to both languages until schema is updated
+  // Database has 'affirmation_text' column (single language for now)
+  // Database uses 'category' field which we map to 'theme'
+  // We map affirmation_text to both text_en and text_es until i18n is implemented
   return data.map((row) => ({
     id: row.id,
-    theme: row.theme as AffirmationTheme,
-    text_en: row.text || row.text_en || '',
-    text_es: row.text || row.text_es || '',
+    theme: row.category as AffirmationTheme, // Database uses 'category', we call it 'theme'
+    text_en: row.affirmation_text || '',
+    text_es: row.affirmation_text || '', // TODO: Add affirmation_text_es column for i18n
   }));
 }
 
