@@ -1,0 +1,9 @@
+# Supabase configuration file
+# Learn more: https://supabase.com/docs/guides/functions/deploy
+
+[project]
+# You can get your project ref from the Supabase Dashboard
+# project_ref = "your-project-ref"
+
+[functions.chat]
+verify_jwt = true

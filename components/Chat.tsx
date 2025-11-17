@@ -1,12 +1,14 @@
 import { FontAwesome } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { View, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
 import { Bubble, GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { COLORS } from '~/constants/theme';
 import { useTheme } from '~/themes/ThemeProvider';
+import { supabase } from '~/utils/supabase';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
@@ -80,7 +82,7 @@ const Chat = () => {
     }
   };
 
-  // Implementing chat generation using gpt-3.5-turbo model
+  // Implementing chat generation using Supabase Edge Function
   const generateText = async () => {
     setIsTyping(true);
     const message = {
@@ -91,16 +93,34 @@ const Chat = () => {
     };
 
     setMessages((prevState) => GiftedChat.append(prevState, [message] as unknown as IMessage[]));
+
     try {
-      console.error(process.env.EXPO_PUBLIC_OPENAI_API_KEY)
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Get the current session token
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        Alert.alert('Error', 'You must be logged in to use the chat');
+        setIsTyping(false);
+        return;
+      }
+
+      // Get Supabase URL from environment
+      const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL;
+
+      if (!supabaseUrl) {
+        Alert.alert('Error', 'Supabase URL not configured');
+        setIsTyping(false);
+        return;
+      }
+
+      // Call the Supabase Edge Function instead of OpenAI directly
+      const response = await fetch(`${supabaseUrl}/functions/v1/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + process.env.EXPO_PUBLIC_OPENAI_API_KEY,
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo-16k',
           messages: [
             {
               role: 'user',
@@ -109,16 +129,18 @@ const Chat = () => {
           ],
         }),
       });
-      if (!response) alert('no response');
+
       if (!response.ok) {
-        console.error(response);
-        throw new Error(JSON.stringify(response));
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error response:', errorData);
+        throw new Error(errorData.error || `Server error: ${response.statusText}`);
       }
+
       const responseJson = await response.json();
 
-      if (!responseJson) alert('no response json');
-      alert(responseJson.choices[0].message.content);
-      console.log(responseJson.choices[0].message.content);
+      if (!responseJson?.choices?.[0]?.message?.content) {
+        throw new Error('Invalid response format from server');
+      }
 
       const messageContent = responseJson.choices[0].message.content;
 
@@ -129,7 +151,7 @@ const Chat = () => {
         _id: Math.random().toString(36).substring(7),
         text: messageContent.trim(),
         createAt: new Date(),
-        user: { _id: 2, name: 'ChatGPT' },
+        user: { _id: 2, name: 'AI Assistant' },
       };
 
       setIsTyping(false);
@@ -137,62 +159,21 @@ const Chat = () => {
         GiftedChat.append(prevState, [newMessage] as unknown as IMessage[])
       );
     } catch (error) {
-      alert(error);
+      setIsTyping(false);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      Alert.alert('Error', `Failed to get response: ${errorMessage}`);
+      console.error('Chat error:', error);
     }
   };
 
-  // implementing images generations
-  /*   const generateImages = () => {
-    setIsTyping(true);
-    const message = {
-      _id: Math.random().toString(36).substring(7),
-      text: inputMessage,
-      createdAt: new Date(),
-      user: { _id: 1 },
-    };
-
-    setMessages((previousMessage) => GiftedChat.append(previousMessage, [message]));
-
-    fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + process.env.EXPO_PUBLIC_OPENAI_API_KEY,
-      },
-      body: JSON.stringify({
-        prompt: inputMessage,
-        n: 1,
-        size: '1024x1024',
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data[0].url);
-        setInputMessage('');
-        setOutputMessage(data.data[0].url);
-        setIsTyping(false);
-
-        data.data.forEach((item: any) => {
-          const message = {
-            _id: Math.random().toString(36).substring(7),
-            text: 'Image',
-            createdAt: new Date(),
-            user: { _id: 2, name: 'ChatGPT' },
-            image: item.url,
-          };
-
-          setMessages((previousMessage) => GiftedChat.append(previousMessage, [message]));
-        });
-      });
-  }; */
+  // Note: Image generation would need a separate Edge Function
+  // to avoid exposing the OpenAI API key
 
   const submitHandler = async () => {
+    if (!inputMessage.trim()) {
+      return;
+    }
     await generateText();
-    /*     if (inputMessage.toLowerCase().startsWith('generate image')) {
-      generateImages();
-    } else {
-      await generateText();
-    } */
   };
 
   const handleInputText = (text: string) => {
