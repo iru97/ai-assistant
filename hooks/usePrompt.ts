@@ -89,8 +89,8 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
   /**
    * Load or refresh the daily prompt
    */
-  const loadDailyPrompt = useCallback(() => {
-    const prompt = getDailyPrompt(language, categoryFilter);
+  const loadDailyPrompt = useCallback(async () => {
+    const prompt = await getDailyPrompt(language, categoryFilter);
     setDailyPrompt(prompt);
     return prompt;
   }, [language, categoryFilter]);
@@ -130,7 +130,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
         const shouldReset = await checkAndResetDaily();
 
         // Load daily prompt
-        const daily = loadDailyPrompt();
+        const daily = await loadDailyPrompt();
 
         // Check if there's a saved current prompt
         const savedPromptId = await AsyncStorage.getItem(STORAGE_KEYS.CURRENT_PROMPT_ID);
@@ -138,7 +138,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
         if (savedPromptId && !shouldReset) {
           // User had shuffled - restore their shuffled prompt
           const promptId = parseInt(savedPromptId, 10);
-          const savedPrompt = daily.id === promptId ? daily : getRandomPrompt(language, categoryFilter, daily.id);
+          const savedPrompt = daily.id === promptId ? daily : await getRandomPrompt(language, categoryFilter, daily.id);
           setCurrentPrompt(savedPrompt);
           setIsDaily(savedPrompt.id === daily.id);
         } else {
@@ -149,7 +149,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
       } catch (error) {
         console.error('Error initializing prompts:', error);
         // Fallback to daily prompt
-        const daily = loadDailyPrompt();
+        const daily = await loadDailyPrompt();
         setCurrentPrompt(daily);
         setIsDaily(true);
       } finally {
@@ -166,7 +166,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
   const shufflePrompt = useCallback(async () => {
     if (!currentPrompt || !dailyPrompt) return;
 
-    const newPrompt = getRandomPrompt(language, categoryFilter, currentPrompt.id);
+    const newPrompt = await getRandomPrompt(language, categoryFilter, currentPrompt.id);
     setCurrentPrompt(newPrompt);
     setIsDaily(newPrompt.id === dailyPrompt.id);
 
@@ -203,7 +203,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.LANGUAGE, lang);
       // Reload prompts with new language
-      const daily = getDailyPrompt(lang, categoryFilter);
+      const daily = await getDailyPrompt(lang, categoryFilter);
       setDailyPrompt(daily);
       setCurrentPrompt(daily);
       setIsDaily(true);
@@ -224,7 +224,7 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
         await AsyncStorage.removeItem(STORAGE_KEYS.CATEGORY_FILTER);
       }
       // Reload prompts with new filter
-      const daily = getDailyPrompt(language, category);
+      const daily = await getDailyPrompt(language, category);
       setDailyPrompt(daily);
       setCurrentPrompt(daily);
       setIsDaily(true);

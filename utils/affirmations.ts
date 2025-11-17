@@ -3,12 +3,18 @@
  *
  * Provides functions to get daily affirmations, random affirmations, and filter affirmations
  * by theme. Uses a deterministic algorithm seeded by date for consistent daily affirmations.
+ *
+ * Data is loaded from Supabase database with fallback to local JSON files.
+ * Affirmations are cached in memory to avoid repeated database calls.
  */
 
-import affirmationsData from '../content/affirmations.json';
+import { supabase } from './supabase';
 import type { Affirmation, AffirmationTheme, Language } from '../types/affirmations';
 
-const allAffirmations: Affirmation[] = affirmationsData.affirmations;
+// Memory cache for affirmations
+let affirmationsCache: Affirmation[] | null = null;
+let isLoading = false;
+let loadPromise: Promise<Affirmation[]> | null = null;
 
 /**
  * Get the day of year (1-365/366)
@@ -47,6 +53,87 @@ function filterByTheme(affirmations: Affirmation[], theme?: AffirmationTheme): A
 }
 
 /**
+ * Fetch affirmations from Supabase database
+ * Maps database schema to TypeScript interface
+ */
+async function fetchAffirmationsFromSupabase(): Promise<Affirmation[]> {
+  const { data, error } = await supabase
+    .from('affirmations')
+    .select('*')
+    .eq('is_active', true)
+    .order('id');
+
+  if (error) throw error;
+
+  if (!data || data.length === 0) {
+    throw new Error('No affirmations found in database');
+  }
+
+  // Map database fields to TypeScript types
+  // Note: Database currently has only 'text' column, not 'text_en' and 'text_es'
+  // We map 'text' to both languages until schema is updated
+  return data.map((row) => ({
+    id: row.id,
+    theme: row.theme as AffirmationTheme,
+    text_en: row.text || row.text_en || '',
+    text_es: row.text || row.text_es || '',
+  }));
+}
+
+/**
+ * Load affirmations from Supabase with fallback to JSON
+ * Implements caching to avoid repeated database calls
+ */
+async function loadAffirmations(): Promise<Affirmation[]> {
+  // Return cached data if available
+  if (affirmationsCache) {
+    return affirmationsCache;
+  }
+
+  // If already loading, return the existing promise
+  if (isLoading && loadPromise) {
+    return loadPromise;
+  }
+
+  // Start loading
+  isLoading = true;
+  loadPromise = (async () => {
+    try {
+      // Try to fetch from Supabase
+      const affirmations = await fetchAffirmationsFromSupabase();
+      affirmationsCache = affirmations;
+      return affirmations;
+    } catch (error) {
+      console.warn('Failed to load affirmations from Supabase, using JSON fallback:', error);
+
+      // Fallback to JSON file
+      try {
+        const affirmationsData = await import('../content/affirmations.json');
+        affirmationsCache = affirmationsData.affirmations;
+        return affirmationsCache;
+      } catch (jsonError) {
+        console.error('Failed to load affirmations from JSON:', jsonError);
+        throw new Error('Failed to load affirmations from both Supabase and JSON');
+      }
+    } finally {
+      isLoading = false;
+      loadPromise = null;
+    }
+  })();
+
+  return loadPromise;
+}
+
+/**
+ * Refresh affirmations from Supabase (clears cache and reloads)
+ * Useful for manual refresh or after database updates
+ */
+export async function refreshAffirmations(): Promise<Affirmation[]> {
+  affirmationsCache = null;
+  return loadAffirmations();
+}
+
+/**
  * Get the text for an affirmation in the specified language
  */
 export function getAffirmationText(affirmation: Affirmation, language: Language = 'en'): string {
@@ -61,10 +148,11 @@ export function getAffirmationText(affirmation: Affirmation, language: Language 
  * @param theme - Optional theme filter
  * @returns The daily affirmation
  */
-export function getDailyAffirmation(
+export async function getDailyAffirmation(
   language: Language = 'en',
   theme?: AffirmationTheme
-): Affirmation {
+): Promise<Affirmation> {
+  const allAffirmations = await loadAffirmations();
   const availableAffirmations = filterByTheme(allAffirmations, theme);
 
   if (availableAffirmations.length === 0) {
@@ -86,11 +174,12 @@ export function getDailyAffirmation(
  * @param excludeId - ID of affirmation to exclude (usually current affirmation)
  * @returns A random affirmation
  */
-export function getRandomAffirmation(
+export async function getRandomAffirmation(
   language: Language = 'en',
   theme?: AffirmationTheme,
   excludeId?: number
-): Affirmation {
+): Promise<Affirmation> {
+  const allAffirmations = await loadAffirmations();
   let availableAffirmations = filterByTheme(allAffirmations, theme);
 
   // Exclude the current affirmation if provided
@@ -115,7 +204,8 @@ export function getRandomAffirmation(
  * @param language - User's preferred language (not used in selection, just for consistency)
  * @returns The affirmation with the specified ID, or null if not found
  */
-export function getAffirmationById(id: number, language: Language = 'en'): Affirmation | null {
+export async function getAffirmationById(id: number, language: Language = 'en'): Promise<Affirmation | null> {
+  const allAffirmations = await loadAffirmations();
   return allAffirmations.find((a) => a.id === id) || null;
 }
 
@@ -126,10 +216,11 @@ export function getAffirmationById(id: number, language: Language = 'en'): Affir
  * @param language - User's preferred language (not used in selection, just for consistency)
  * @returns Array of affirmations in the specified theme
  */
-export function getAffirmationsByTheme(
+export async function getAffirmationsByTheme(
   theme: AffirmationTheme,
   language: Language = 'en'
-): Affirmation[] {
+): Promise<Affirmation[]> {
+  const allAffirmations = await loadAffirmations();
   return filterByTheme(allAffirmations, theme);
 }
 
@@ -164,14 +255,16 @@ export function getThemeDisplayName(theme: AffirmationTheme, language: Language 
 /**
  * Get total count of affirmations
  */
-export function getTotalAffirmationsCount(): number {
+export async function getTotalAffirmationsCount(): Promise<number> {
+  const allAffirmations = await loadAffirmations();
   return allAffirmations.length;
 }
 
 /**
  * Get count of affirmations in a theme
  */
-export function getThemeAffirmationsCount(theme: AffirmationTheme): number {
+export async function getThemeAffirmationsCount(theme: AffirmationTheme): Promise<number> {
+  const allAffirmations = await loadAffirmations();
   return filterByTheme(allAffirmations, theme).length;
 }
 
@@ -183,11 +276,12 @@ export function getThemeAffirmationsCount(theme: AffirmationTheme): number {
  * @param theme - Optional theme filter
  * @returns Array of affirmations with their dates
  */
-export function getAffirmationsHistory(
+export async function getAffirmationsHistory(
   days: number = 7,
   language: Language = 'en',
   theme?: AffirmationTheme
-): Array<{ date: Date; affirmation: Affirmation }> {
+): Promise<Array<{ date: Date; affirmation: Affirmation }>> {
+  const allAffirmations = await loadAffirmations();
   const history: Array<{ date: Date; affirmation: Affirmation }> = [];
   const today = new Date();
 

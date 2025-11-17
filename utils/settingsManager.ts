@@ -138,29 +138,47 @@ async function loadSettingsFromSupabase(): Promise<UserSettings | null> {
 
     if (error || !data) return null;
 
-    // Map database columns to UserSettings interface
+    // Helper function to safely parse JSON arrays
+    const parseJsonArray = (value: any, fallback: string[] = []): string[] => {
+      if (!value) return fallback;
+      if (Array.isArray(value)) return value;
+      try {
+        const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+        return Array.isArray(parsed) ? parsed : fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    // Map ALL database columns (snake_case) to UserSettings interface (camelCase)
     const settings: UserSettings = {
+      // Preferences
       language: data.language as LanguageType,
       theme: data.theme as ThemeType,
-      startScreen: DEFAULT_SETTINGS.startScreen, // Not in DB yet
+      startScreen: (data.start_screen as StartScreenType) || DEFAULT_SETTINGS.startScreen,
 
-      defaultMood: DEFAULT_SETTINGS.defaultMood, // Not in DB yet
-      autoSaveInterval: DEFAULT_SETTINGS.autoSaveInterval, // Not in DB yet
-      photoQuality: DEFAULT_SETTINGS.photoQuality, // Not in DB yet
-      promptCategoryFilter: DEFAULT_SETTINGS.promptCategoryFilter, // Not in DB yet
+      // Journaling
+      defaultMood: (data.default_mood as DefaultMoodType) || DEFAULT_SETTINGS.defaultMood,
+      autoSaveInterval: (data.auto_save_interval as AutoSaveInterval) || DEFAULT_SETTINGS.autoSaveInterval,
+      photoQuality: (data.photo_quality as PhotoQuality) || DEFAULT_SETTINGS.photoQuality,
+      promptCategoryFilter: parseJsonArray(data.prompt_category_filter, DEFAULT_SETTINGS.promptCategoryFilter),
 
-      dailyAffirmationEnabled: data.daily_affirmation_enabled,
-      dailyAffirmationTime: data.daily_affirmation_time || '08:00',
-      affirmationThemeFilter: DEFAULT_SETTINGS.affirmationThemeFilter, // Not in DB yet
+      // Affirmations
+      dailyAffirmationEnabled: data.daily_affirmation_enabled ?? DEFAULT_SETTINGS.dailyAffirmationEnabled,
+      dailyAffirmationTime: data.daily_affirmation_time || DEFAULT_SETTINGS.dailyAffirmationTime,
+      affirmationThemeFilter: parseJsonArray(data.affirmation_theme_filter, DEFAULT_SETTINGS.affirmationThemeFilter),
 
-      dailyPromptEnabled: data.daily_prompt_enabled,
-      dailyPromptTime: data.daily_prompt_time || '09:00',
-      moodRemindersEnabled: DEFAULT_SETTINGS.moodRemindersEnabled, // Not in DB yet
-      syncNotificationsEnabled: DEFAULT_SETTINGS.syncNotificationsEnabled, // Not in DB yet
+      // Notifications
+      dailyPromptEnabled: data.daily_prompt_enabled ?? DEFAULT_SETTINGS.dailyPromptEnabled,
+      dailyPromptTime: data.daily_prompt_time || DEFAULT_SETTINGS.dailyPromptTime,
+      moodRemindersEnabled: data.mood_reminders_enabled ?? DEFAULT_SETTINGS.moodRemindersEnabled,
+      syncNotificationsEnabled: data.sync_notifications_enabled ?? DEFAULT_SETTINGS.syncNotificationsEnabled,
 
-      requireAuthOnAppOpen: data.require_auth_on_app_open,
-      syncDataToCloud: true, // Default to true
+      // Privacy & Security
+      requireAuthOnAppOpen: data.require_auth_on_app_open ?? DEFAULT_SETTINGS.requireAuthOnAppOpen,
+      syncDataToCloud: data.sync_data_to_cloud ?? DEFAULT_SETTINGS.syncDataToCloud,
 
+      // Metadata
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };
@@ -180,16 +198,37 @@ async function saveSettingsToSupabase(settings: UserSettings): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Map UserSettings to database columns
+    // Map ALL UserSettings fields to database columns (snake_case)
+    // Note: displayName, email, avatarUrl are NOT synced here (they belong in profiles table)
     const dbSettings = {
       user_id: user.id,
+
+      // Preferences
       language: settings.language,
       theme: settings.theme,
+      start_screen: settings.startScreen,
+
+      // Journaling
+      default_mood: settings.defaultMood,
+      auto_save_interval: settings.autoSaveInterval,
+      photo_quality: settings.photoQuality,
+      prompt_category_filter: JSON.stringify(settings.promptCategoryFilter), // Convert array to JSON
+
+      // Affirmations
       daily_affirmation_enabled: settings.dailyAffirmationEnabled,
       daily_affirmation_time: settings.dailyAffirmationTime,
+      affirmation_theme_filter: JSON.stringify(settings.affirmationThemeFilter), // Convert array to JSON
+
+      // Notifications
       daily_prompt_enabled: settings.dailyPromptEnabled,
       daily_prompt_time: settings.dailyPromptTime,
+      mood_reminders_enabled: settings.moodRemindersEnabled,
+      sync_notifications_enabled: settings.syncNotificationsEnabled,
+
+      // Privacy & Security
       require_auth_on_app_open: settings.requireAuthOnAppOpen,
+      sync_data_to_cloud: settings.syncDataToCloud,
+
       updated_at: new Date().toISOString(),
     };
 

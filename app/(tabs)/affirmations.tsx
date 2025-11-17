@@ -86,18 +86,18 @@ export default function AffirmationsScreen() {
 
   const loadAffirmations = async () => {
     const prefs = await getAffirmationPreferences();
-    const daily = getDailyAffirmation(prefs.language, prefs.themeFilter);
+    const daily = await getDailyAffirmation(prefs.language, prefs.themeFilter);
     setDailyAffirmation(daily);
     setCurrentAffirmation(daily);
     setIsDaily(true);
 
     // Load history
-    const affirmationHistory = getAffirmationsHistory(7, prefs.language, prefs.themeFilter);
+    const affirmationHistory = await getAffirmationsHistory(7, prefs.language, prefs.themeFilter);
     setHistory(affirmationHistory);
   };
 
-  const handleNewAffirmation = () => {
-    const random = getRandomAffirmation(
+  const handleNewAffirmation = async () => {
+    const random = await getRandomAffirmation(
       preferences.language,
       preferences.themeFilter,
       currentAffirmation?.id

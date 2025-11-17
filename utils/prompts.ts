@@ -4,12 +4,18 @@
  * Provides functions to get daily prompts, random prompts, and filter prompts
  * by category. Uses a deterministic algorithm seeded by date for consistent
  * daily prompts.
+ *
+ * Data is loaded from Supabase database with fallback to local JSON files.
+ * Prompts are cached in memory to avoid repeated database calls.
  */
 
-import promptsData from '../content/prompts.json';
+import { supabase } from './supabase';
 import type { Prompt, PromptCategory, Language } from '../types/prompts';
 
-const allPrompts: Prompt[] = promptsData.prompts;
+// Memory cache for prompts
+let promptsCache: Prompt[] | null = null;
+let isLoading = false;
+let loadPromise: Promise<Prompt[]> | null = null;
 
 /**
  * Get the day of year (1-365/366)
@@ -48,6 +54,87 @@ function filterByCategory(prompts: Prompt[], category?: PromptCategory): Prompt[
 }
 
 /**
+ * Fetch prompts from Supabase database
+ * Maps database schema to TypeScript interface
+ */
+async function fetchPromptsFromSupabase(): Promise<Prompt[]> {
+  const { data, error } = await supabase
+    .from('prompts')
+    .select('*')
+    .eq('is_active', true)
+    .order('id');
+
+  if (error) throw error;
+
+  if (!data || data.length === 0) {
+    throw new Error('No prompts found in database');
+  }
+
+  // Map database fields to TypeScript types
+  // Note: Database currently has only 'text' column, not 'text_en' and 'text_es'
+  // We map 'text' to both languages until schema is updated
+  return data.map((row) => ({
+    id: row.id,
+    category: row.category as PromptCategory,
+    text_en: row.text || row.text_en || '',
+    text_es: row.text || row.text_es || '',
+  }));
+}
+
+/**
+ * Load prompts from Supabase with fallback to JSON
+ * Implements caching to avoid repeated database calls
+ */
+async function loadPrompts(): Promise<Prompt[]> {
+  // Return cached data if available
+  if (promptsCache) {
+    return promptsCache;
+  }
+
+  // If already loading, return the existing promise
+  if (isLoading && loadPromise) {
+    return loadPromise;
+  }
+
+  // Start loading
+  isLoading = true;
+  loadPromise = (async () => {
+    try {
+      // Try to fetch from Supabase
+      const prompts = await fetchPromptsFromSupabase();
+      promptsCache = prompts;
+      return prompts;
+    } catch (error) {
+      console.warn('Failed to load prompts from Supabase, using JSON fallback:', error);
+
+      // Fallback to JSON file
+      try {
+        const promptsData = await import('../content/prompts.json');
+        promptsCache = promptsData.prompts;
+        return promptsCache;
+      } catch (jsonError) {
+        console.error('Failed to load prompts from JSON:', jsonError);
+        throw new Error('Failed to load prompts from both Supabase and JSON');
+      }
+    } finally {
+      isLoading = false;
+      loadPromise = null;
+    }
+  })();
+
+  return loadPromise;
+}
+
+/**
+ * Refresh prompts from Supabase (clears cache and reloads)
+ * Useful for manual refresh or after database updates
+ */
+export async function refreshPrompts(): Promise<Prompt[]> {
+  promptsCache = null;
+  return loadPrompts();
+}
+
+/**
  * Get the text for a prompt in the specified language
  */
 export function getPromptText(prompt: Prompt, language: Language = 'en'): string {
@@ -62,10 +149,11 @@ export function getPromptText(prompt: Prompt, language: Language = 'en'): string
  * @param category - Optional category filter
  * @returns The daily prompt
  */
-export function getDailyPrompt(
+export async function getDailyPrompt(
   language: Language = 'en',
   category?: PromptCategory
-): Prompt {
+): Promise<Prompt> {
+  const allPrompts = await loadPrompts();
   const availablePrompts = filterByCategory(allPrompts, category);
 
   if (availablePrompts.length === 0) {
@@ -87,11 +175,12 @@ export function getDailyPrompt(
  * @param excludeId - ID of prompt to exclude (usually current prompt)
  * @returns A random prompt
  */
-export function getRandomPrompt(
+export async function getRandomPrompt(
   language: Language = 'en',
   category?: PromptCategory,
   excludeId?: number
-): Prompt {
+): Promise<Prompt> {
+  const allPrompts = await loadPrompts();
   let availablePrompts = filterByCategory(allPrompts, category);
 
   // Exclude the current prompt if provided
@@ -114,9 +203,10 @@ export function getRandomPrompt(
  *
  * @param id - The prompt ID
  * @param language - User's preferred language (not used in selection, just for consistency)
- * @returns The prompt with the specified ID, or the first prompt if not found
+ * @returns The prompt with the specified ID, or null if not found
  */
-export function getPromptById(id: number, language: Language = 'en'): Prompt | null {
+export async function getPromptById(id: number, language: Language = 'en'): Promise<Prompt | null> {
+  const allPrompts = await loadPrompts();
   return allPrompts.find((p) => p.id === id) || null;
 }
 
@@ -127,10 +217,11 @@ export function getPromptById(id: number, language: Language = 'en'): Prompt | n
  * @param language - User's preferred language (not used in selection, just for consistency)
  * @returns Array of prompts in the specified category
  */
-export function getPromptsByCategory(
+export async function getPromptsByCategory(
   category: PromptCategory,
   language: Language = 'en'
-): Prompt[] {
+): Promise<Prompt[]> {
+  const allPrompts = await loadPrompts();
   return filterByCategory(allPrompts, category);
 }
 
@@ -159,13 +250,15 @@ export function getCategoryDisplayName(category: PromptCategory, language: Langu
 /**
  * Get total count of prompts
  */
-export function getTotalPromptsCount(): number {
+export async function getTotalPromptsCount(): Promise<number> {
+  const allPrompts = await loadPrompts();
   return allPrompts.length;
 }
 
 /**
  * Get count of prompts in a category
  */
-export function getCategoryPromptsCount(category: PromptCategory): number {
+export async function getCategoryPromptsCount(category: PromptCategory): Promise<number> {
+  const allPrompts = await loadPrompts();
   return filterByCategory(allPrompts, category).length;
 }

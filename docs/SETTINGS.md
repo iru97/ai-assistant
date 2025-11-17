@@ -79,25 +79,25 @@ Settings are stored in **two places**:
 - **Theme**: Light / Dark / Auto
 - **Start Screen**: Journal / Mood / Affirmations
 
-### 3. Journaling (Not in DB yet)
+### 3. Journaling
 
 - **Default Mood**: None / Last used
 - **Auto-save Interval**: 30s / 1min / 2min
 - **Photo Quality**: High / Medium / Low
-- **Prompt Category Filter**: All / Specific categories
+- **Prompt Category Filter**: All / Specific categories (array filter)
 
 ### 4. Affirmations
 
 - **Daily Affirmations**: Toggle (default: ON)
 - **Notification Time**: Time picker (default: 08:00)
-- **Theme Filter**: All / Specific themes (not in DB yet)
+- **Theme Filter**: All / Specific themes (array filter)
 
 ### 5. Notifications
 
 - **Daily Prompts**: Toggle (default: ON)
 - **Prompt Time**: Time picker (default: 09:00)
-- **Mood Reminders**: Toggle (future feature)
-- **Sync Notifications**: Toggle (show when synced)
+- **Mood Reminders**: Toggle (default: OFF)
+- **Sync Notifications**: Toggle (default: ON, show when synced)
 
 ### 6. Privacy & Security
 
@@ -328,49 +328,71 @@ All destructive actions require confirmation dialogs:
 
 ## Database Schema
 
-### user_settings Table
+### user_settings Table (COMPLETE - All 16 Fields)
 
 ```sql
 CREATE TABLE user_settings (
   id UUID PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id),
+  user_id UUID REFERENCES auth.users(id) UNIQUE,
 
-  -- Notifications
-  daily_prompt_enabled BOOLEAN DEFAULT TRUE,
-  daily_prompt_time TIME DEFAULT '09:00:00',
+  -- Preferences (3 fields)
+  language language_type DEFAULT 'en',
+  theme TEXT DEFAULT 'auto',
+  start_screen TEXT DEFAULT 'journal',
+
+  -- Journaling (4 fields)
+  default_mood TEXT DEFAULT 'none',
+  auto_save_interval INTEGER DEFAULT 60,
+  photo_quality TEXT DEFAULT 'medium',
+  prompt_category_filter JSONB DEFAULT '[]'::jsonb,
+
+  -- Affirmations (2 fields)
   daily_affirmation_enabled BOOLEAN DEFAULT TRUE,
   daily_affirmation_time TIME DEFAULT '08:00:00',
+  affirmation_theme_filter JSONB DEFAULT '[]'::jsonb,
 
-  -- Preferences
-  language language_type DEFAULT 'en',
-  theme TEXT DEFAULT 'light',
+  -- Notifications (4 fields)
+  daily_prompt_enabled BOOLEAN DEFAULT TRUE,
+  daily_prompt_time TIME DEFAULT '09:00:00',
+  mood_reminders_enabled BOOLEAN DEFAULT FALSE,
+  sync_notifications_enabled BOOLEAN DEFAULT TRUE,
 
-  -- Privacy
+  -- Privacy & Security (2 fields)
   require_auth_on_app_open BOOLEAN DEFAULT FALSE,
+  sync_data_to_cloud BOOLEAN DEFAULT TRUE,
 
-  -- Timestamps
+  -- Metadata
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-  UNIQUE(user_id)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
-### Missing Fields
+### Complete Field Mapping (TypeScript ↔ Database)
 
-These fields are planned but not yet in database:
+| # | TypeScript Field | Database Column | Type | Default | Category |
+|---|------------------|-----------------|------|---------|----------|
+| 1 | `language` | `language` | `'en' \| 'es'` | `'en'` | Preferences |
+| 2 | `theme` | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Preferences |
+| 3 | `startScreen` | `start_screen` | `'journal' \| 'mood' \| 'affirmations'` | `'journal'` | Preferences |
+| 4 | `defaultMood` | `default_mood` | `'none' \| 'last_used'` | `'none'` | Journaling |
+| 5 | `autoSaveInterval` | `auto_save_interval` | `30 \| 60 \| 120` | `60` | Journaling |
+| 6 | `photoQuality` | `photo_quality` | `'high' \| 'medium' \| 'low'` | `'medium'` | Journaling |
+| 7 | `promptCategoryFilter` | `prompt_category_filter` | `string[]` (JSONB) | `[]` | Journaling |
+| 8 | `dailyAffirmationEnabled` | `daily_affirmation_enabled` | `boolean` | `true` | Affirmations |
+| 9 | `dailyAffirmationTime` | `daily_affirmation_time` | `string` (TIME) | `'08:00'` | Affirmations |
+| 10 | `affirmationThemeFilter` | `affirmation_theme_filter` | `string[]` (JSONB) | `[]` | Affirmations |
+| 11 | `dailyPromptEnabled` | `daily_prompt_enabled` | `boolean` | `true` | Notifications |
+| 12 | `dailyPromptTime` | `daily_prompt_time` | `string` (TIME) | `'09:00'` | Notifications |
+| 13 | `moodRemindersEnabled` | `mood_reminders_enabled` | `boolean` | `false` | Notifications |
+| 14 | `syncNotificationsEnabled` | `sync_notifications_enabled` | `boolean` | `true` | Notifications |
+| 15 | `requireAuthOnAppOpen` | `require_auth_on_app_open` | `boolean` | `false` | Privacy |
+| 16 | `syncDataToCloud` | `sync_data_to_cloud` | `boolean` | `true` | Privacy |
 
-- `start_screen`
-- `default_mood`
-- `auto_save_interval`
-- `photo_quality`
-- `prompt_category_filter`
-- `affirmation_theme_filter`
-- `mood_reminders_enabled`
-- `sync_notifications_enabled`
-- `sync_data_to_cloud`
-
-**TODO**: Add migration to add these fields.
+**Notes:**
+- Profile fields (`displayName`, `email`, `avatarUrl`) are stored in `profiles` table, NOT `user_settings`
+- Array fields (`promptCategoryFilter`, `affirmationThemeFilter`) are stored as JSONB and serialized with `JSON.stringify()`
+- Time fields are stored as Postgres TIME type but handled as strings in TypeScript (HH:mm format)
+- All 16 settings fields are now fully synchronized between AsyncStorage and Supabase (as of migration 005)
 
 ## Security Considerations
 
@@ -428,36 +450,35 @@ These fields are planned but not yet in database:
    - Export as PDF
    - Verify file content
 
+## Migration History
+
+### Migration 001: Initial Schema
+Created `user_settings` table with 7 core fields:
+- language, theme
+- daily_prompt_enabled, daily_prompt_time
+- daily_affirmation_enabled, daily_affirmation_time
+- require_auth_on_app_open
+
+### Migration 005: Complete Settings Schema ✅
+Added 9 missing fields to complete full synchronization:
+- start_screen, default_mood, auto_save_interval, photo_quality
+- prompt_category_filter, affirmation_theme_filter
+- mood_reminders_enabled, sync_notifications_enabled, sync_data_to_cloud
+
+**Result:** All 16 UserSettings fields now sync between AsyncStorage and Supabase.
+
 ## Future Enhancements
 
 ### Planned Features
 
 1. **Profile Photo Upload**: Avatar upload to Supabase Storage
 2. **Time Picker**: Native time picker for notification times
-3. **Category Filters**: Filter prompts and affirmations by category
-4. **Auto-save Settings**: Configurable auto-save interval
-5. **Photo Quality**: Configurable photo compression
-6. **Mood Reminders**: Scheduled mood check-in notifications
-7. **Multi-language Support**: Full i18n integration
-8. **Theme Switching**: Actual light/dark mode implementation
-9. **PDF Export**: Proper PDF generation (vs text file)
-10. **Data Import**: Import from JSON backup
-
-### Database Migrations Needed
-
-```sql
--- Add missing columns to user_settings
-ALTER TABLE user_settings
-  ADD COLUMN start_screen TEXT DEFAULT 'journal',
-  ADD COLUMN default_mood TEXT DEFAULT 'none',
-  ADD COLUMN auto_save_interval INTEGER DEFAULT 60,
-  ADD COLUMN photo_quality TEXT DEFAULT 'medium',
-  ADD COLUMN prompt_category_filter TEXT[] DEFAULT '{}',
-  ADD COLUMN affirmation_theme_filter TEXT[] DEFAULT '{}',
-  ADD COLUMN mood_reminders_enabled BOOLEAN DEFAULT FALSE,
-  ADD COLUMN sync_notifications_enabled BOOLEAN DEFAULT TRUE,
-  ADD COLUMN sync_data_to_cloud BOOLEAN DEFAULT TRUE;
-```
+3. **Multi-language Support**: Full i18n integration (beyond en/es)
+4. **Theme Switching**: Enhanced dark mode implementation
+5. **PDF Export**: Proper PDF generation (vs text file)
+6. **Data Import**: Import from JSON backup
+7. **Settings Versioning**: Track settings change history
+8. **Field-level Sync**: Only sync changed fields instead of entire object
 
 ## Troubleshooting
 
