@@ -1,9 +1,10 @@
 import { router, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '~/providers/AuthProvider';
 import { ThemeProvider } from '~/themes/ThemeProvider';
 import { supabase } from '~/utils/supabase';
+import { hasCompletedOnboarding } from '~/utils/onboardingManager';
 
 import '../global.css';
 
@@ -16,33 +17,72 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const { setUser } = useAuth();
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setUser(session);
-        router.replace('/(tabs)/assistant');
-      } else {
-        setUser();
-        console.log('no user');
-      }
-    });
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Check authentication
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session) {
+          setUser(session);
+
+          // Check if user has completed onboarding
+          const onboardingComplete = await hasCompletedOnboarding();
+
+          if (!onboardingComplete) {
+            // First-time user - show onboarding
+            router.replace('/onboarding');
+          } else {
+            // Returning user - go to main app
+            router.replace('/(tabs)/assistant');
+          }
+        } else {
+          setUser();
+          console.log('no user');
+          // No session - go to login
+          router.replace('/(auth)/login');
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+      } finally {
+        setIsCheckingOnboarding(false);
+      }
+    };
+
+    initializeApp();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
         setUser(session);
-        router.replace('/(tabs)/assistant');
+
+        // Check onboarding status
+        const onboardingComplete = await hasCompletedOnboarding();
+
+        if (!onboardingComplete) {
+          router.replace('/onboarding');
+        } else {
+          router.replace('/(tabs)/assistant');
+        }
       } else {
         setUser();
         console.log('no user');
         router.replace('/(auth)/login');
       }
     });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   return (
     <ThemeProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>

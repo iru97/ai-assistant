@@ -18,6 +18,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="affirmations"
+        options={{
+          title: 'Affirmations',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="heart" size={24} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="assistant"
         options={{
           title: 'Assistant',

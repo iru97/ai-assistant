@@ -319,6 +319,15 @@ async function syncSingleEntry(queueItem: SyncQueueItem): Promise<void> {
       await removeFromSyncQueue(entryId);
 
       console.log(`Entry ${entryId} synced successfully`);
+
+      // If entry has a photo, queue photo upload
+      if (entry.photoUri && !entry.photoUrl) {
+        console.log(`Queuing photo upload for entry ${entryId}`);
+        await addToSyncQueue(entryId, 'photo', 'normal');
+      }
+    } else if (type === 'photo') {
+      // Sync photo to Supabase Storage
+      await syncPhoto(queueItem);
     }
   } catch (error) {
     console.error(`Failed to sync entry ${entryId}:`, error);
@@ -384,5 +393,123 @@ export function getSyncStatusIcon(entry: LocalJournalEntry): string {
       return '📸';
     default:
       return '';
+  }
+}
+
+/**
+ * Upload photo for journal entry
+ * This is called after the text content is synced successfully
+ */
+export async function uploadPhoto(entryId: string): Promise<boolean> {
+  try {
+    console.log(`Starting photo upload for entry ${entryId}`);
+
+    // Import storage helpers (lazy import to avoid circular deps)
+    const { uploadPhotoWithRetry } = await import('~/utils/storageHelpers');
+
+    // Get entry from secure store
+    const entry = await getEntryFromSecureStore(entryId);
+    if (!entry) {
+      console.error(`Entry ${entryId} not found`);
+      return false;
+    }
+
+    // Check if entry has a local photo to upload
+    if (!entry.photoUri) {
+      console.log(`Entry ${entryId} has no photo to upload`);
+      return true; // Not an error, just no photo
+    }
+
+    // Check if photo was already uploaded
+    if (entry.photoUrl) {
+      console.log(`Entry ${entryId} photo already uploaded: ${entry.photoUrl}`);
+      return true;
+    }
+
+    // Upload photo with retry logic
+    const result = await uploadPhotoWithRetry(
+      entry.photoUri,
+      entry.id,
+      entry.userId
+    );
+
+    if (!result.success) {
+      console.error(`Photo upload failed for entry ${entryId}:`, result.error);
+      return false;
+    }
+
+    console.log(`Photo uploaded successfully: ${result.publicUrl}`);
+
+    // Update local entry with photo URL
+    entry.photoUrl = result.publicUrl;
+    entry.syncStatus = SyncStatus.SYNCED;
+    await saveEntryToSecureStore(entry);
+
+    // Update Supabase entry with photo URL
+    const { error } = await supabase
+      .from('journal_entries')
+      .update({ photo_url: result.publicUrl })
+      .eq('id', entryId);
+
+    if (error) {
+      console.error(`Failed to update entry ${entryId} with photo URL:`, error);
+      return false;
+    }
+
+    console.log(`Entry ${entryId} updated with photo URL`);
+    return true;
+  } catch (error) {
+    console.error(`Photo upload failed for entry ${entryId}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Sync photo for an entry (queued separately from text sync)
+ */
+async function syncPhoto(queueItem: SyncQueueItem): Promise<void> {
+  const { entryId } = queueItem;
+
+  try {
+    // Update status to syncing
+    await updateSyncStatus(entryId, SyncStatus.PHOTO_PENDING);
+
+    // Get entry
+    const entry = await getEntryFromSecureStore(entryId);
+    if (!entry) {
+      console.error(`Entry ${entryId} not found`);
+      await removeFromSyncQueue(entryId);
+      return;
+    }
+
+    // Upload photo
+    const success = await uploadPhoto(entryId);
+
+    if (success) {
+      // Remove from sync queue
+      await removeFromSyncQueue(entryId);
+      console.log(`Photo synced successfully for entry ${entryId}`);
+    } else {
+      throw new Error('Photo upload failed');
+    }
+  } catch (error) {
+    console.error(`Failed to sync photo for entry ${entryId}:`, error);
+
+    // Increment retry count
+    queueItem.retryCount++;
+
+    // Calculate next retry time (exponential backoff)
+    const backoffSeconds = Math.min(300, Math.pow(3, queueItem.retryCount) * 5);
+    queueItem.nextRetryAt = new Date(Date.now() + backoffSeconds * 1000).toISOString();
+
+    // Update sync queue
+    await updateSyncQueue(queueItem);
+
+    // If max retries exceeded, log error
+    if (queueItem.retryCount >= 10) {
+      console.error(`Photo upload for entry ${entryId} exceeded max retries`);
+      // Keep in queue but mark as failed
+      await updateSyncStatus(entryId, SyncStatus.FAILED);
+    }
   }
 }
