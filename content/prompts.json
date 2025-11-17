@@ -1,0 +1,604 @@
+{
+  "prompts": [
+    {
+      "id": 1,
+      "category": "gratitude",
+      "text_en": "What's one small thing that brought you comfort today?",
+      "text_es": "¿Qué pequeña cosa te trajo consuelo hoy?"
+    },
+    {
+      "id": 2,
+      "category": "gratitude",
+      "text_en": "Who is someone in your life that makes you feel safe? What do they do that helps you feel this way?",
+      "text_es": "¿Quién es alguien en tu vida que te hace sentir seguro/a? ¿Qué hace esta persona que te ayuda a sentirte así?"
+    },
+    {
+      "id": 3,
+      "category": "gratitude",
+      "text_en": "What's something in nature that you appreciate today?",
+      "text_es": "¿Qué cosa de la naturaleza aprecias hoy?"
+    },
+    {
+      "id": 4,
+      "category": "gratitude",
+      "text_en": "Describe a moment today when you felt present, even if it was brief.",
+      "text_es": "Describe un momento de hoy en que te sentiste presente, aunque haya sido breve."
+    },
+    {
+      "id": 5,
+      "category": "gratitude",
+      "text_en": "What's a simple pleasure you're grateful for right now?",
+      "text_es": "¿Cuál es un placer simple por el que te sientes agradecido/a en este momento?"
+    },
+    {
+      "id": 6,
+      "category": "gratitude",
+      "text_en": "What sound, smell, or sensation brought you peace today?",
+      "text_es": "¿Qué sonido, aroma o sensación te trajo paz hoy?"
+    },
+    {
+      "id": 7,
+      "category": "gratitude",
+      "text_en": "What's something kind that someone did for you recently?",
+      "text_es": "¿Qué cosa amable hizo alguien por ti recientemente?"
+    },
+    {
+      "id": 8,
+      "category": "gratitude",
+      "text_en": "What part of your living space makes you feel most at ease?",
+      "text_es": "¿Qué parte de tu hogar te hace sentir más tranquilo/a?"
+    },
+    {
+      "id": 9,
+      "category": "gratitude",
+      "text_en": "What's a resource or support that you're grateful to have access to?",
+      "text_es": "¿Cuál es un recurso o apoyo al que te sientes agradecido/a de tener acceso?"
+    },
+    {
+      "id": 10,
+      "category": "gratitude",
+      "text_en": "What ability or strength of yours are you appreciating today?",
+      "text_es": "¿Qué habilidad o fortaleza tuya estás apreciando hoy?"
+    },
+    {
+      "id": 11,
+      "category": "gratitude",
+      "text_en": "What creative outlet or hobby brings you joy?",
+      "text_es": "¿Qué actividad creativa o pasatiempo te trae alegría?"
+    },
+    {
+      "id": 12,
+      "category": "gratitude",
+      "text_en": "What's something about this season or time of year that you enjoy?",
+      "text_es": "¿Qué cosa de esta temporada o época del año disfrutas?"
+    },
+    {
+      "id": 13,
+      "category": "gratitude",
+      "text_en": "Who or what made you smile recently?",
+      "text_es": "¿Quién o qué te hizo sonreír recientemente?"
+    },
+    {
+      "id": 14,
+      "category": "gratitude",
+      "text_en": "What's a piece of art, music, or writing that you're grateful exists?",
+      "text_es": "¿Cuál es una obra de arte, música o escritura por la que te sientes agradecido/a que exista?"
+    },
+    {
+      "id": 15,
+      "category": "gratitude",
+      "text_en": "What's something you're looking forward to, no matter how small?",
+      "text_es": "¿Qué cosa esperas con ilusión, sin importar cuán pequeña sea?"
+    },
+    {
+      "id": 16,
+      "category": "gratitude",
+      "text_en": "What's a comfort item or object that brings you a sense of safety?",
+      "text_es": "¿Cuál es un objeto o artículo reconfortante que te brinda una sensación de seguridad?"
+    },
+    {
+      "id": 17,
+      "category": "gratitude",
+      "text_en": "What's something about your body that you appreciate for what it allows you to do or experience?",
+      "text_es": "¿Qué cosa de tu cuerpo aprecias por lo que te permite hacer o experimentar?"
+    },
+    {
+      "id": 18,
+      "category": "gratitude",
+      "text_en": "What's a memory that brings you warmth when you think about it?",
+      "text_es": "¿Cuál es un recuerdo que te trae calidez cuando piensas en él?"
+    },
+    {
+      "id": 19,
+      "category": "gratitude",
+      "text_en": "What opportunity for rest or restoration are you grateful for today?",
+      "text_es": "¿Qué oportunidad de descanso o restauración agradeces hoy?"
+    },
+    {
+      "id": 20,
+      "category": "gratitude",
+      "text_en": "What's something that exists in your life now that didn't a year ago?",
+      "text_es": "¿Qué cosa existe en tu vida ahora que no existía hace un año?"
+    },
+    {
+      "id": 21,
+      "category": "self-compassion",
+      "text_en": "If a dear friend was feeling what you're feeling right now, what would you say to them?",
+      "text_es": "Si un amigo querido estuviera sintiendo lo que tú sientes ahora, ¿qué le dirías?"
+    },
+    {
+      "id": 22,
+      "category": "self-compassion",
+      "text_en": "What does your inner critic say to you? Can you respond with gentleness instead?",
+      "text_es": "¿Qué te dice tu crítico interior? ¿Puedes responder con gentileza en su lugar?"
+    },
+    {
+      "id": 23,
+      "category": "self-compassion",
+      "text_en": "What's one way you can be gentle with yourself today?",
+      "text_es": "¿De qué manera puedes ser gentil contigo mismo/a hoy?"
+    },
+    {
+      "id": 24,
+      "category": "self-compassion",
+      "text_en": "What permission do you need to give yourself right now?",
+      "text_es": "¿Qué permiso necesitas darte a ti mismo/a en este momento?"
+    },
+    {
+      "id": 25,
+      "category": "self-compassion",
+      "text_en": "What would unconditional kindness toward yourself look like today?",
+      "text_es": "¿Cómo sería la bondad incondicional hacia ti mismo/a hoy?"
+    },
+    {
+      "id": 26,
+      "category": "self-compassion",
+      "text_en": "What's something difficult you're going through that deserves acknowledgment?",
+      "text_es": "¿Qué cosa difícil estás atravesando que merece ser reconocida?"
+    },
+    {
+      "id": 27,
+      "category": "self-compassion",
+      "text_en": "How can you honor your needs today without judgment?",
+      "text_es": "¿Cómo puedes honrar tus necesidades hoy sin juzgarte?"
+    },
+    {
+      "id": 28,
+      "category": "self-compassion",
+      "text_en": "What would it feel like to accept where you are right now in your journey?",
+      "text_es": "¿Cómo se sentiría aceptar dónde estás ahora en tu camino?"
+    },
+    {
+      "id": 29,
+      "category": "self-compassion",
+      "text_en": "What's one harsh expectation you can release today?",
+      "text_es": "¿Cuál es una expectativa dura que puedes soltar hoy?"
+    },
+    {
+      "id": 30,
+      "category": "self-compassion",
+      "text_en": "What does rest mean to you, and how can you give yourself that today?",
+      "text_es": "¿Qué significa el descanso para ti y cómo puedes dártelo hoy?"
+    },
+    {
+      "id": 31,
+      "category": "self-compassion",
+      "text_en": "What's something you've been criticizing yourself for that you can choose to be curious about instead?",
+      "text_es": "¿Qué cosa por la que te has estado criticando puedes elegir explorar con curiosidad en su lugar?"
+    },
+    {
+      "id": 32,
+      "category": "self-compassion",
+      "text_en": "How can you speak to yourself with the same compassion you'd offer a child?",
+      "text_es": "¿Cómo puedes hablarte a ti mismo/a con la misma compasión que le ofrecerías a un niño/a?"
+    },
+    {
+      "id": 33,
+      "category": "self-compassion",
+      "text_en": "What boundary do you need to set to protect your peace?",
+      "text_es": "¿Qué límite necesitas establecer para proteger tu paz?"
+    },
+    {
+      "id": 34,
+      "category": "self-compassion",
+      "text_en": "What's one way your body is asking for care today?",
+      "text_es": "¿De qué manera tu cuerpo está pidiendo cuidado hoy?"
+    },
+    {
+      "id": 35,
+      "category": "self-compassion",
+      "text_en": "What would self-care look like for you right now, free from shoulds or expectations?",
+      "text_es": "¿Cómo sería el autocuidado para ti ahora, libre de deberías o expectativas?"
+    },
+    {
+      "id": 36,
+      "category": "self-compassion",
+      "text_en": "What parts of yourself have you been rejecting that deserve acceptance?",
+      "text_es": "¿Qué partes de ti mismo/a has estado rechazando que merecen aceptación?"
+    },
+    {
+      "id": 37,
+      "category": "self-compassion",
+      "text_en": "How can you give yourself credit for simply showing up today?",
+      "text_es": "¿Cómo puedes reconocerte simplemente por estar presente hoy?"
+    },
+    {
+      "id": 38,
+      "category": "self-compassion",
+      "text_en": "What's a mistake or 'failure' you can reframe as a learning experience?",
+      "text_es": "¿Cuál es un error o 'fracaso' que puedes replantear como una experiencia de aprendizaje?"
+    },
+    {
+      "id": 39,
+      "category": "self-compassion",
+      "text_en": "What would happen if you gave yourself permission to not be okay right now?",
+      "text_es": "¿Qué pasaría si te dieras permiso para no estar bien ahora mismo?"
+    },
+    {
+      "id": 40,
+      "category": "self-compassion",
+      "text_en": "What's one small act of kindness you can offer yourself today?",
+      "text_es": "¿Cuál es un pequeño acto de bondad que puedes ofrecerte hoy?"
+    },
+    {
+      "id": 41,
+      "category": "self-compassion",
+      "text_en": "How can you be patient with your healing process today?",
+      "text_es": "¿Cómo puedes ser paciente con tu proceso de sanación hoy?"
+    },
+    {
+      "id": 42,
+      "category": "self-compassion",
+      "text_en": "What would it feel like to treat yourself as someone worthy of care?",
+      "text_es": "¿Cómo se sentiría tratarte como alguien digno/a de cuidado?"
+    },
+    {
+      "id": 43,
+      "category": "self-compassion",
+      "text_en": "What's something you need to hear right now that no one else can say to you?",
+      "text_es": "¿Qué cosa necesitas escuchar ahora que nadie más puede decirte?"
+    },
+    {
+      "id": 44,
+      "category": "self-compassion",
+      "text_en": "How can you make space for both your struggles and your strength today?",
+      "text_es": "¿Cómo puedes hacer espacio tanto para tus luchas como para tu fuerza hoy?"
+    },
+    {
+      "id": 45,
+      "category": "self-compassion",
+      "text_en": "What's one way you can prioritize your wellbeing without guilt?",
+      "text_es": "¿De qué manera puedes priorizar tu bienestar sin culpa?"
+    },
+    {
+      "id": 46,
+      "category": "emotional-reflection",
+      "text_en": "What emotion is most present for you today, and where do you feel it in your body?",
+      "text_es": "¿Qué emoción está más presente para ti hoy y dónde la sientes en tu cuerpo?"
+    },
+    {
+      "id": 47,
+      "category": "emotional-reflection",
+      "text_en": "What's underneath the surface of what you're feeling right now?",
+      "text_es": "¿Qué hay debajo de la superficie de lo que estás sintiendo ahora?"
+    },
+    {
+      "id": 48,
+      "category": "emotional-reflection",
+      "text_en": "What need might your emotions be trying to communicate to you?",
+      "text_es": "¿Qué necesidad podrían estar intentando comunicarte tus emociones?"
+    },
+    {
+      "id": 49,
+      "category": "emotional-reflection",
+      "text_en": "When did you first notice this feeling today? What was happening?",
+      "text_es": "¿Cuándo notaste por primera vez este sentimiento hoy? ¿Qué estaba pasando?"
+    },
+    {
+      "id": 50,
+      "category": "emotional-reflection",
+      "text_en": "What's a difficult emotion you've been avoiding, and what might it be trying to tell you?",
+      "text_es": "¿Cuál es una emoción difícil que has estado evitando y qué podría estar intentando decirte?"
+    },
+    {
+      "id": 51,
+      "category": "emotional-reflection",
+      "text_en": "How do you know when you're feeling overwhelmed, and what are your early warning signs?",
+      "text_es": "¿Cómo sabes cuando te sientes abrumado/a y cuáles son tus señales de advertencia tempranas?"
+    },
+    {
+      "id": 52,
+      "category": "emotional-reflection",
+      "text_en": "What emotions feel safe for you to express, and which ones don't?",
+      "text_es": "¿Qué emociones se sienten seguras para ti expresar y cuáles no?"
+    },
+    {
+      "id": 53,
+      "category": "emotional-reflection",
+      "text_en": "What's bringing you the most peace or anxiety right now?",
+      "text_es": "¿Qué te trae la mayor paz o ansiedad en este momento?"
+    },
+    {
+      "id": 54,
+      "category": "emotional-reflection",
+      "text_en": "Describe your emotional landscape today. What weather pattern would it be?",
+      "text_es": "Describe tu paisaje emocional hoy. ¿Qué patrón climático sería?"
+    },
+    {
+      "id": 55,
+      "category": "emotional-reflection",
+      "text_en": "What feeling are you carrying from yesterday that you haven't processed yet?",
+      "text_es": "¿Qué sentimiento estás cargando de ayer que aún no has procesado?"
+    },
+    {
+      "id": 56,
+      "category": "emotional-reflection",
+      "text_en": "What makes you feel most alive and present?",
+      "text_es": "¿Qué te hace sentir más vivo/a y presente?"
+    },
+    {
+      "id": 57,
+      "category": "emotional-reflection",
+      "text_en": "What emotion surprised you today, and why do you think it showed up?",
+      "text_es": "¿Qué emoción te sorprendió hoy y por qué crees que apareció?"
+    },
+    {
+      "id": 58,
+      "category": "emotional-reflection",
+      "text_en": "How are you really doing beneath the 'I'm fine'?",
+      "text_es": "¿Cómo estás realmente debajo del 'estoy bien'?"
+    },
+    {
+      "id": 59,
+      "category": "emotional-reflection",
+      "text_en": "What feeling would you like to experience more of in your life?",
+      "text_es": "¿Qué sentimiento te gustaría experimentar más en tu vida?"
+    },
+    {
+      "id": 60,
+      "category": "emotional-reflection",
+      "text_en": "What does joy look like for you, even in small moments?",
+      "text_es": "¿Cómo se ve la alegría para ti, incluso en pequeños momentos?"
+    },
+    {
+      "id": 61,
+      "category": "emotional-reflection",
+      "text_en": "What's taking up the most emotional space for you right now?",
+      "text_es": "¿Qué está ocupando el mayor espacio emocional para ti ahora?"
+    },
+    {
+      "id": 62,
+      "category": "emotional-reflection",
+      "text_en": "When do you feel most like yourself?",
+      "text_es": "¿Cuándo te sientes más como tú mismo/a?"
+    },
+    {
+      "id": 63,
+      "category": "emotional-reflection",
+      "text_en": "What emotion are you most comfortable with, and why might that be?",
+      "text_es": "¿Con qué emoción te sientes más cómodo/a y por qué podría ser?"
+    },
+    {
+      "id": 64,
+      "category": "emotional-reflection",
+      "text_en": "What feelings came up for you in connection today?",
+      "text_es": "¿Qué sentimientos surgieron para ti en conexión hoy?"
+    },
+    {
+      "id": 65,
+      "category": "emotional-reflection",
+      "text_en": "What's one emotion you wish you could better understand about yourself?",
+      "text_es": "¿Cuál es una emoción que desearías entender mejor sobre ti mismo/a?"
+    },
+    {
+      "id": 66,
+      "category": "progress-growth",
+      "text_en": "What's something you understand about yourself now that you didn't before?",
+      "text_es": "¿Qué cosa entiendes sobre ti mismo/a ahora que no entendías antes?"
+    },
+    {
+      "id": 67,
+      "category": "progress-growth",
+      "text_en": "What's a pattern or habit you're becoming more aware of?",
+      "text_es": "¿Cuál es un patrón o hábito del que estás tomando más conciencia?"
+    },
+    {
+      "id": 68,
+      "category": "progress-growth",
+      "text_en": "What's something you're learning to do differently in your recovery?",
+      "text_es": "¿Qué cosa estás aprendiendo a hacer de manera diferente en tu recuperación?"
+    },
+    {
+      "id": 69,
+      "category": "progress-growth",
+      "text_en": "What belief about yourself is beginning to shift?",
+      "text_es": "¿Qué creencia sobre ti mismo/a está comenzando a cambiar?"
+    },
+    {
+      "id": 70,
+      "category": "progress-growth",
+      "text_en": "What's a small victory you had this week, even if no one else noticed?",
+      "text_es": "¿Cuál es una pequeña victoria que tuviste esta semana, aunque nadie más la haya notado?"
+    },
+    {
+      "id": 71,
+      "category": "progress-growth",
+      "text_en": "What skill or coping tool are you getting better at using?",
+      "text_es": "¿Qué habilidad o herramienta de afrontamiento estás mejorando en usar?"
+    },
+    {
+      "id": 72,
+      "category": "progress-growth",
+      "text_en": "How have you shown up for yourself differently lately?",
+      "text_es": "¿Cómo te has presentado para ti mismo/a de manera diferente últimamente?"
+    },
+    {
+      "id": 73,
+      "category": "progress-growth",
+      "text_en": "What's becoming easier that used to feel impossible?",
+      "text_es": "¿Qué se está volviendo más fácil que solía sentirse imposible?"
+    },
+    {
+      "id": 74,
+      "category": "progress-growth",
+      "text_en": "What have you learned about your needs or boundaries recently?",
+      "text_es": "¿Qué has aprendido sobre tus necesidades o límites recientemente?"
+    },
+    {
+      "id": 75,
+      "category": "progress-growth",
+      "text_en": "What's a way you've surprised yourself in your healing journey?",
+      "text_es": "¿De qué manera te has sorprendido a ti mismo/a en tu camino de sanación?"
+    },
+    {
+      "id": 76,
+      "category": "progress-growth",
+      "text_en": "What old story about yourself are you starting to release?",
+      "text_es": "¿Qué vieja historia sobre ti mismo/a estás comenzando a soltar?"
+    },
+    {
+      "id": 77,
+      "category": "progress-growth",
+      "text_en": "What's something you're proud of about your journey, without minimizing it?",
+      "text_es": "¿De qué cosa estás orgulloso/a sobre tu camino, sin minimizarlo?"
+    },
+    {
+      "id": 78,
+      "category": "progress-growth",
+      "text_en": "How has your relationship with yourself evolved?",
+      "text_es": "¿Cómo ha evolucionado tu relación contigo mismo/a?"
+    },
+    {
+      "id": 79,
+      "category": "progress-growth",
+      "text_en": "What's a new perspective you're beginning to embrace?",
+      "text_es": "¿Cuál es una nueva perspectiva que estás comenzando a abrazar?"
+    },
+    {
+      "id": 80,
+      "category": "progress-growth",
+      "text_en": "What progress are you making that isn't visible to others?",
+      "text_es": "¿Qué progreso estás haciendo que no es visible para los demás?"
+    },
+    {
+      "id": 81,
+      "category": "coping-resilience",
+      "text_en": "What helps you feel grounded when things feel chaotic?",
+      "text_es": "¿Qué te ayuda a sentirte estable cuando las cosas se sienten caóticas?"
+    },
+    {
+      "id": 82,
+      "category": "coping-resilience",
+      "text_en": "What's your go-to coping strategy, and is it serving you right now?",
+      "text_es": "¿Cuál es tu estrategia de afrontamiento principal y te está sirviendo ahora?"
+    },
+    {
+      "id": 83,
+      "category": "coping-resilience",
+      "text_en": "What do you need most when you're struggling?",
+      "text_es": "¿Qué necesitas más cuando estás pasando por dificultades?"
+    },
+    {
+      "id": 84,
+      "category": "coping-resilience",
+      "text_en": "What helps you reconnect with yourself when you feel disconnected?",
+      "text_es": "¿Qué te ayuda a reconectar contigo mismo/a cuando te sientes desconectado/a?"
+    },
+    {
+      "id": 85,
+      "category": "coping-resilience",
+      "text_en": "What's a healthy way you've been managing difficult feelings?",
+      "text_es": "¿Cuál es una manera saludable en que has estado manejando sentimientos difíciles?"
+    },
+    {
+      "id": 86,
+      "category": "coping-resilience",
+      "text_en": "Who can you reach out to when you need support, and what stops you from doing so?",
+      "text_es": "¿A quién puedes contactar cuando necesitas apoyo y qué te detiene de hacerlo?"
+    },
+    {
+      "id": 87,
+      "category": "coping-resilience",
+      "text_en": "What's one thing you can do right now to take care of yourself?",
+      "text_es": "¿Qué cosa puedes hacer ahora mismo para cuidarte?"
+    },
+    {
+      "id": 88,
+      "category": "coping-resilience",
+      "text_en": "What gives you strength to keep going on difficult days?",
+      "text_es": "¿Qué te da fuerza para seguir adelante en los días difíciles?"
+    },
+    {
+      "id": 89,
+      "category": "coping-resilience",
+      "text_en": "What does resilience look like for you?",
+      "text_es": "¿Cómo se ve la resiliencia para ti?"
+    },
+    {
+      "id": 90,
+      "category": "coping-resilience",
+      "text_en": "What reminder or affirmation do you need to hear when things feel hard?",
+      "text_es": "¿Qué recordatorio o afirmación necesitas escuchar cuando las cosas se sienten difíciles?"
+    },
+    {
+      "id": 91,
+      "category": "coping-resilience",
+      "text_en": "What safe space (physical or mental) can you retreat to when you need it?",
+      "text_es": "¿Qué espacio seguro (físico o mental) puedes utilizar cuando lo necesitas?"
+    },
+    {
+      "id": 92,
+      "category": "coping-resilience",
+      "text_en": "What have you survived that shows your strength?",
+      "text_es": "¿Qué has sobrevivido que muestra tu fortaleza?"
+    },
+    {
+      "id": 93,
+      "category": "coping-resilience",
+      "text_en": "What soothes you when you're feeling activated or triggered?",
+      "text_es": "¿Qué te calma cuando te sientes activado/a o desencadenado/a?"
+    },
+    {
+      "id": 94,
+      "category": "coping-resilience",
+      "text_en": "What's a challenge you're facing, and what resources do you have to help you through it?",
+      "text_es": "¿Cuál es un desafío que estás enfrentando y qué recursos tienes para ayudarte a superarlo?"
+    },
+    {
+      "id": 95,
+      "category": "coping-resilience",
+      "text_en": "What helps you feel safe in your body?",
+      "text_es": "¿Qué te ayuda a sentirte seguro/a en tu cuerpo?"
+    },
+    {
+      "id": 96,
+      "category": "coping-resilience",
+      "text_en": "What do you wish others understood about what you're going through?",
+      "text_es": "¿Qué desearías que otros entendieran sobre lo que estás atravesando?"
+    },
+    {
+      "id": 97,
+      "category": "coping-resilience",
+      "text_en": "What helps you return to the present moment when anxiety takes over?",
+      "text_es": "¿Qué te ayuda a volver al momento presente cuando la ansiedad toma el control?"
+    },
+    {
+      "id": 98,
+      "category": "coping-resilience",
+      "text_en": "What's a boundary you've set that has protected your wellbeing?",
+      "text_es": "¿Cuál es un límite que has establecido que ha protegido tu bienestar?"
+    },
+    {
+      "id": 99,
+      "category": "coping-resilience",
+      "text_en": "What's helping you move through this moment, even if it's just one breath at a time?",
+      "text_es": "¿Qué te está ayudando a atravesar este momento, aunque sea solo una respiración a la vez?"
+    },
+    {
+      "id": 100,
+      "category": "coping-resilience",
+      "text_en": "What would support look like for you today?",
+      "text_es": "¿Cómo se vería el apoyo para ti hoy?"
+    }
+  ]
+}

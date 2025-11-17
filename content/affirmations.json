@@ -1,0 +1,304 @@
+{
+  "affirmations": [
+    {
+      "id": 1,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your worth is not determined by your appearance, your size, or what you eat.",
+      "text_es": "Tu valor no depende de tu apariencia, tu tamaño, ni de lo que comes."
+    },
+    {
+      "id": 2,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are inherently worthy of love and respect, exactly as you are right now.",
+      "text_es": "Eres inherentemente digno de amor y respeto, exactamente como eres ahora."
+    },
+    {
+      "id": 3,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are more than what you see in the mirror.",
+      "text_es": "Eres mucho más que lo que ves en el espejo."
+    },
+    {
+      "id": 4,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your value as a person exists independent of your body.",
+      "text_es": "Tu valor como persona existe independiente de tu cuerpo."
+    },
+    {
+      "id": 5,
+      "theme": "unconditional_self_worth",
+      "text_en": "You don't have to earn your place in this world.",
+      "text_es": "No tienes que ganarte tu lugar en este mundo."
+    },
+    {
+      "id": 6,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your thoughts and feelings matter, regardless of your body.",
+      "text_es": "Tus pensamientos y sentimientos importan, sin importar tu cuerpo."
+    },
+    {
+      "id": 7,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are worthy of care and compassion simply because you exist.",
+      "text_es": "Mereces cuidado y compasión simplemente porque existes."
+    },
+    {
+      "id": 8,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your worth is not a reflection in the mirror—it lives in your heart.",
+      "text_es": "Tu valor no es un reflejo en el espejo—vive en tu corazón."
+    },
+    {
+      "id": 9,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are enough, without changing a single thing.",
+      "text_es": "Eres suficiente, sin cambiar ni una sola cosa."
+    },
+    {
+      "id": 10,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your humanity is not conditional on meeting any standard.",
+      "text_es": "Tu humanidad no está condicionada a cumplir ningún estándar."
+    },
+    {
+      "id": 11,
+      "theme": "unconditional_self_worth",
+      "text_en": "You deserve to take up space in this world.",
+      "text_es": "Mereces ocupar espacio en este mundo."
+    },
+    {
+      "id": 12,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your contributions to the world go far beyond your appearance.",
+      "text_es": "Tus contribuciones al mundo van mucho más allá de tu apariencia."
+    },
+    {
+      "id": 13,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are not a 'before' or 'after'—you are a whole person, always.",
+      "text_es": "No eres un 'antes' ni un 'después'—eres una persona completa, siempre."
+    },
+    {
+      "id": 14,
+      "theme": "unconditional_self_worth",
+      "text_en": "Your worth cannot be measured or weighed.",
+      "text_es": "Tu valor no se puede medir ni pesar."
+    },
+    {
+      "id": 15,
+      "theme": "unconditional_self_worth",
+      "text_en": "You are deserving of kindness, especially from yourself.",
+      "text_es": "Mereces amabilidad, especialmente de ti mismo."
+    },
+    {
+      "id": 16,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Recovery is not linear, and that's completely okay.",
+      "text_es": "La recuperación no es lineal, y eso está completamente bien."
+    },
+    {
+      "id": 17,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Setbacks are part of the journey, not a sign of failure.",
+      "text_es": "Los retrocesos son parte del camino, no una señal de fracaso."
+    },
+    {
+      "id": 18,
+      "theme": "recovery_is_non_linear",
+      "text_en": "You don't have to be perfect at recovery—progress matters more than perfection.",
+      "text_es": "No tienes que ser perfecto en la recuperación—el progreso importa más que la perfección."
+    },
+    {
+      "id": 19,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Having a hard day doesn't erase your progress.",
+      "text_es": "Tener un día difícil no borra tu progreso."
+    },
+    {
+      "id": 20,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Recovery has ups and downs—both are valid parts of healing.",
+      "text_es": "La recuperación tiene altos y bajos—ambos son partes válidas de la sanación."
+    },
+    {
+      "id": 21,
+      "theme": "recovery_is_non_linear",
+      "text_en": "You're allowed to take recovery one moment at a time.",
+      "text_es": "Puedes tomar la recuperación un momento a la vez."
+    },
+    {
+      "id": 22,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Struggling doesn't mean you're moving backwards.",
+      "text_es": "Luchar no significa que estés retrocediendo."
+    },
+    {
+      "id": 23,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Some days will be harder than others, and that doesn't define your journey.",
+      "text_es": "Algunos días serán más difíciles que otros, y eso no define tu camino."
+    },
+    {
+      "id": 24,
+      "theme": "recovery_is_non_linear",
+      "text_en": "Recovery doesn't have a timeline—your pace is valid.",
+      "text_es": "La recuperación no tiene un cronograma—tu ritmo es válido."
+    },
+    {
+      "id": 25,
+      "theme": "recovery_is_non_linear",
+      "text_en": "You don't have to have it all figured out today.",
+      "text_es": "No tienes que tenerlo todo resuelto hoy."
+    },
+    {
+      "id": 26,
+      "theme": "body_acceptance",
+      "text_en": "Your body deserves kindness, not criticism.",
+      "text_es": "Tu cuerpo merece amabilidad, no crítica."
+    },
+    {
+      "id": 27,
+      "theme": "body_acceptance",
+      "text_en": "Your body is working hard to keep you alive—it deserves respect.",
+      "text_es": "Tu cuerpo está trabajando duro para mantenerte vivo—merece respeto."
+    },
+    {
+      "id": 28,
+      "theme": "body_acceptance",
+      "text_en": "You can honor your body without loving every part of it.",
+      "text_es": "Puedes honrar tu cuerpo sin amar cada parte de él."
+    },
+    {
+      "id": 29,
+      "theme": "body_acceptance",
+      "text_en": "Your body is not the enemy—it's been with you through everything.",
+      "text_es": "Tu cuerpo no es el enemigo—ha estado contigo en todo momento."
+    },
+    {
+      "id": 30,
+      "theme": "body_acceptance",
+      "text_en": "Making peace with your body is a process, not a destination.",
+      "text_es": "Hacer las paces con tu cuerpo es un proceso, no un destino."
+    },
+    {
+      "id": 31,
+      "theme": "body_acceptance",
+      "text_en": "Your body's worth is not determined by how it looks.",
+      "text_es": "El valor de tu cuerpo no está determinado por cómo se ve."
+    },
+    {
+      "id": 32,
+      "theme": "body_acceptance",
+      "text_en": "It's okay to have complicated feelings about your body.",
+      "text_es": "Está bien tener sentimientos complicados sobre tu cuerpo."
+    },
+    {
+      "id": 33,
+      "theme": "body_acceptance",
+      "text_en": "Your body carries you through life—that's worth acknowledging.",
+      "text_es": "Tu cuerpo te lleva a través de la vida—eso vale la pena reconocer."
+    },
+    {
+      "id": 34,
+      "theme": "body_acceptance",
+      "text_en": "You don't owe anyone a certain body type or appearance.",
+      "text_es": "No le debes a nadie un tipo de cuerpo o apariencia específica."
+    },
+    {
+      "id": 35,
+      "theme": "body_acceptance",
+      "text_en": "Your body is the least interesting thing about you.",
+      "text_es": "Tu cuerpo es lo menos interesante de ti."
+    },
+    {
+      "id": 36,
+      "theme": "nourishment_and_self_care",
+      "text_en": "You deserve nourishment and care, unconditionally.",
+      "text_es": "Mereces nutrición y cuidado, incondicionalmente."
+    },
+    {
+      "id": 37,
+      "theme": "nourishment_and_self_care",
+      "text_en": "Taking care of yourself is not selfish—it's necessary.",
+      "text_es": "Cuidarte no es egoísta—es necesario."
+    },
+    {
+      "id": 38,
+      "theme": "nourishment_and_self_care",
+      "text_en": "You are allowed to rest without earning it.",
+      "text_es": "Puedes descansar sin tener que ganártelo."
+    },
+    {
+      "id": 39,
+      "theme": "nourishment_and_self_care",
+      "text_en": "Listening to your body's needs is an act of self-respect.",
+      "text_es": "Escuchar las necesidades de tu cuerpo es un acto de respeto propio."
+    },
+    {
+      "id": 40,
+      "theme": "nourishment_and_self_care",
+      "text_en": "Self-care looks different every day, and that's okay.",
+      "text_es": "El autocuidado se ve diferente cada día, y eso está bien."
+    },
+    {
+      "id": 41,
+      "theme": "nourishment_and_self_care",
+      "text_en": "You deserve comfort and gentleness, especially on hard days.",
+      "text_es": "Mereces consuelo y ternura, especialmente en días difíciles."
+    },
+    {
+      "id": 42,
+      "theme": "nourishment_and_self_care",
+      "text_en": "Meeting your needs is not weakness—it's wisdom.",
+      "text_es": "Satisfacer tus necesidades no es debilidad—es sabiduría."
+    },
+    {
+      "id": 43,
+      "theme": "nourishment_and_self_care",
+      "text_en": "You're allowed to prioritize your wellbeing.",
+      "text_es": "Puedes priorizar tu bienestar."
+    },
+    {
+      "id": 44,
+      "theme": "nourishment_and_self_care",
+      "text_en": "Caring for yourself is a radical act in a world that tells you not to.",
+      "text_es": "Cuidarte es un acto radical en un mundo que te dice que no lo hagas."
+    },
+    {
+      "id": 45,
+      "theme": "nourishment_and_self_care",
+      "text_en": "You deserve to feel safe and cared for in your own life.",
+      "text_es": "Mereces sentirte seguro y cuidado en tu propia vida."
+    },
+    {
+      "id": 46,
+      "theme": "strength_and_resilience",
+      "text_en": "Every day you choose recovery is a victory, no matter how small it feels.",
+      "text_es": "Cada día que eliges la recuperación es una victoria, sin importar cuán pequeña se sienta."
+    },
+    {
+      "id": 47,
+      "theme": "strength_and_resilience",
+      "text_en": "It's okay to struggle—recovery is hard work.",
+      "text_es": "Está bien luchar—la recuperación es trabajo duro."
+    },
+    {
+      "id": 48,
+      "theme": "strength_and_resilience",
+      "text_en": "You are stronger than you realize, even on days when you feel weak.",
+      "text_es": "Eres más fuerte de lo que crees, incluso en días cuando te sientes débil."
+    },
+    {
+      "id": 49,
+      "theme": "strength_and_resilience",
+      "text_en": "Choosing to keep going, even when it's hard, is an act of courage.",
+      "text_es": "Elegir seguir adelante, incluso cuando es difícil, es un acto de valentía."
+    },
+    {
+      "id": 50,
+      "theme": "strength_and_resilience",
+      "text_en": "You've survived every difficult day so far—that's proof of your strength.",
+      "text_es": "Has sobrevivido cada día difícil hasta ahora—esa es la prueba de tu fuerza."
+    }
+  ]
+}
