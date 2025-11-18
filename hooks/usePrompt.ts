@@ -137,8 +137,8 @@ export function usePrompt(options?: UsePromptOptions): UsePromptReturn {
 
         if (savedPromptId && !shouldReset) {
           // User had shuffled - restore their shuffled prompt
-          const promptId = parseInt(savedPromptId, 10);
-          const savedPrompt = daily.id === promptId ? daily : await getRandomPrompt(language, categoryFilter, daily.id);
+          // savedPromptId is UUID string, no need to parse
+          const savedPrompt = daily.id === savedPromptId ? daily : await getRandomPrompt(language, categoryFilter, daily.id);
           setCurrentPrompt(savedPrompt);
           setIsDaily(savedPrompt.id === daily.id);
         } else {

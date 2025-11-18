@@ -110,7 +110,11 @@ async function loadAffirmations(): Promise<Affirmation[]> {
       // Fallback to JSON file
       try {
         const affirmationsData = await import('../content/affirmations.json');
-        affirmationsCache = affirmationsData.affirmations;
+        // Map JSON IDs (numbers) to strings for consistency with database UUIDs
+        affirmationsCache = affirmationsData.affirmations.map((a: any) => ({
+          ...a,
+          id: String(a.id), // Convert number ID to string
+        }));
         return affirmationsCache;
       } catch (jsonError) {
         console.error('Failed to load affirmations from JSON:', jsonError);
@@ -154,10 +158,20 @@ export async function getDailyAffirmation(
   theme?: AffirmationTheme
 ): Promise<Affirmation> {
   const allAffirmations = await loadAffirmations();
+
+  // Check if we have ANY affirmations at all BEFORE filtering
+  if (allAffirmations.length === 0) {
+    throw new Error('No affirmations available. Please check your data sources or network connection.');
+  }
+
   const availableAffirmations = filterByTheme(allAffirmations, theme);
 
   if (availableAffirmations.length === 0) {
     // Fallback to all affirmations if theme filter yields no results
+    // Only recurse if we had a theme filter (prevents infinite loop)
+    if (!theme) {
+      throw new Error('No affirmations available');
+    }
     return getDailyAffirmation(language, undefined);
   }
 
@@ -178,7 +192,7 @@ export async function getDailyAffirmation(
 export async function getRandomAffirmation(
   language: Language = 'en',
   theme?: AffirmationTheme,
-  excludeId?: number
+  excludeId?: string
 ): Promise<Affirmation> {
   const allAffirmations = await loadAffirmations();
   let availableAffirmations = filterByTheme(allAffirmations, theme);
@@ -201,11 +215,11 @@ export async function getRandomAffirmation(
 /**
  * Get a specific affirmation by ID
  *
- * @param id - The affirmation ID
+ * @param id - The affirmation ID (UUID string)
  * @param language - User's preferred language (not used in selection, just for consistency)
  * @returns The affirmation with the specified ID, or null if not found
  */
-export async function getAffirmationById(id: number, language: Language = 'en'): Promise<Affirmation | null> {
+export async function getAffirmationById(id: string, language: Language = 'en'): Promise<Affirmation | null> {
   const allAffirmations = await loadAffirmations();
   return allAffirmations.find((a) => a.id === id) || null;
 }

@@ -14,7 +14,7 @@ export type AffirmationTheme =
 export type Language = 'en' | 'es';
 
 export interface Affirmation {
-  id: number;
+  id: string; // UUID from database
   theme: AffirmationTheme;
   text_en: string;
   text_es: string;
@@ -40,6 +40,6 @@ export interface DailyAffirmationState {
 
 export interface AffirmationHistory {
   date: string; // ISO date string
-  affirmationId: number;
+  affirmationId: string; // UUID from database
   isFavorite?: boolean;
 }

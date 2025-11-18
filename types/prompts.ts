@@ -14,7 +14,7 @@ export type PromptCategory =
 export type Language = 'en' | 'es';
 
 export interface Prompt {
-  id: number;
+  id: string; // UUID from database
   category: PromptCategory;
   text_en: string;
   text_es: string;

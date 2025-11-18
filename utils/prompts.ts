@@ -110,7 +110,11 @@ async function loadPrompts(): Promise<Prompt[]> {
       // Fallback to JSON file
       try {
         const promptsData = await import('../content/prompts.json');
-        promptsCache = promptsData.prompts;
+        // Map JSON IDs (numbers) to strings for consistency with database UUIDs
+        promptsCache = promptsData.prompts.map((p: any) => ({
+          ...p,
+          id: String(p.id), // Convert number ID to string
+        }));
         return promptsCache;
       } catch (jsonError) {
         console.error('Failed to load prompts from JSON:', jsonError);
@@ -154,10 +158,20 @@ export async function getDailyPrompt(
   category?: PromptCategory
 ): Promise<Prompt> {
   const allPrompts = await loadPrompts();
+
+  // Check if we have ANY prompts at all BEFORE filtering
+  if (allPrompts.length === 0) {
+    throw new Error('No prompts available. Please check your data sources or network connection.');
+  }
+
   const availablePrompts = filterByCategory(allPrompts, category);
 
   if (availablePrompts.length === 0) {
     // Fallback to all prompts if category filter yields no results
+    // Only recurse if we had a category filter (prevents infinite loop)
+    if (!category) {
+      throw new Error('No prompts available');
+    }
     return getDailyPrompt(language, undefined);
   }
 
@@ -178,7 +192,7 @@ export async function getDailyPrompt(
 export async function getRandomPrompt(
   language: Language = 'en',
   category?: PromptCategory,
-  excludeId?: number
+  excludeId?: string
 ): Promise<Prompt> {
   const allPrompts = await loadPrompts();
   let availablePrompts = filterByCategory(allPrompts, category);
@@ -201,11 +215,11 @@ export async function getRandomPrompt(
 /**
  * Get a specific prompt by ID
  *
- * @param id - The prompt ID
+ * @param id - The prompt ID (UUID string)
  * @param language - User's preferred language (not used in selection, just for consistency)
  * @returns The prompt with the specified ID, or null if not found
  */
-export async function getPromptById(id: number, language: Language = 'en'): Promise<Prompt | null> {
+export async function getPromptById(id: string, language: Language = 'en'): Promise<Prompt | null> {
   const allPrompts = await loadPrompts();
   return allPrompts.find((p) => p.id === id) || null;
 }
